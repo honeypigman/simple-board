@@ -1,26 +1,68 @@
 <?php
-/**
- *  Title : Board Controller | Honeypigman@gmail.com
- *  Date : 2020.12.30
- * 
- */
 
-namespace App\Http\Controllers;
+namespace App\Func;
 
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Http\Request;
-use DB;
+USE DB;
 use Func;
 use Session;
 
-class BoardController extends BaseController
+class Board
 {
-    public function action(Request $request)
+    static function template($tbl){
+        unset($_SET);
+        $_SET['TABLE'] = $tbl;
+
+        switch( $tbl ) {
+            // Simple Board
+            case 'brdsim':
+                $_SET['TAB']['used'] = true;
+                $_SET['TAB']['object'] = ['Active', 'Delete'];
+                
+                $_SET['SEARCH']['used'] = true;
+                
+                $_SET['BTN']['used'] = true;    
+                $_SET['BTN']['excel'] = true;
+                $_SET['BTN']['write'] = true;
+                
+                $_SET['TITLE']['object'] = [['no',3], ['sort',3], ['title', 20], ['info', 15], ['status', 5]];
+                break;
+            case 'usrlst':
+                $_SET['TAB']['used'] = true;
+                $_SET['TAB']['object'] = ['Active', 'Delete'];
+                
+                $_SET['SEARCH']['used'] = true;
+                
+                $_SET['BTN']['used'] = true;    
+                $_SET['BTN']['excel'] = true;
+                $_SET['BTN']['write'] = true;
+                
+                $_SET['TITLE']['object'] = [['no',3], ['sort',3], ['title', 25], ['info', 15], ['status', 5]];
+                break;
+            default:
+                $_SET['TAB']['used'] = false;
+                $_SET['TAB']['object'] = ['Active', 'Delete'];
+                
+                $_SET['SEARCH']['used'] = false;
+                
+                $_SET['BTN']['used'] = false;
+
+                $_SET['TITLE']['object'] = [['no',3], ['sort',3], ['title', 20], ['info', 15], ['status', 5]];
+        }
+        return $_SET;
+    }
+
+    static function board(Request $request){
+        /**
+         *  PARAM[1] : table name
+         */
+        $_SET = $this->template('brdsim');
+        return view('admin.board')->with('set', $_SET);
+    }
+
+    static function action($tbl)
     {
         unset($_DATA);
-        $_DATA = Func::requestToData($request);
+        $_DATA = $_POST;
 
        if($_DATA['action'] == "Save"){
             $_DATA['sort'] = 1;
@@ -30,7 +72,6 @@ class BoardController extends BaseController
             $_DATA['m_time'] = date('Y-m-d H:i:s');
             $_DATA['status'] = 'Y';
 
-            $tbl="brdsim";
             DB::table($tbl)->insert([ 
                 Func::setRecords($tbl, $_DATA)
             ]);
@@ -42,7 +83,6 @@ class BoardController extends BaseController
             $_DATA['m_id'] = Session::get('login_id');
             $_DATA['m_time'] = date('Y-m-d H:i:s');
     
-            $tbl="brdsim";
             DB::table($tbl)
                 ->where('no',$_DATA['bno'])
                 ->update(
@@ -53,12 +93,12 @@ class BoardController extends BaseController
         }
 
         else if($_DATA['action'] == "Delete"){
+            unset($_DATA);
             $_DATA['bno'] = $_POST['bno'];
             $_DATA['status'] = 'N';
             $_DATA['d_id'] = Session::get('login_id');
             $_DATA['d_time'] = date('Y-m-d H:i:s');
     
-            $tbl="brdsim";
             DB::table($tbl)
                 ->where('no',$_DATA['bno'])
                 ->update(
@@ -68,7 +108,6 @@ class BoardController extends BaseController
         }
 
         else if($_DATA['action'] == "View"){
-            $tbl="brdsim";
             $list = DB::table($tbl)->select(DB::raw('no, title, content, status'))
             ->where([
                 ['no', '=', $_DATA['bno']]
@@ -81,7 +120,6 @@ class BoardController extends BaseController
         else if($_DATA['action'] == "List"){
             
             //setPage
-            $tbl="brdsim";
             $page = Array();
             $page['limit']=env('PER_PAGE');
             $page['offset']=($_DATA['current_page']>1?(($_DATA['current_page']-1)*env('PER_PAGE')):0);
@@ -114,7 +152,6 @@ class BoardController extends BaseController
         }else{
             $_RS['result'] = false;
         }
-
         return json_encode($_RS);
-    }
+    }    
 }

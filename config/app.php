@@ -228,7 +228,8 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
         // User Custom
-        'Func' => App\Func::class,
+        'Func' => App\Func\Func::class,
+        'Board' => App\Func\Board::class,
     ],
 
 ];

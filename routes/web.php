@@ -13,23 +13,43 @@ use Illuminate\Support\Facades\Route;
 |
 */
 use App\Http\Middleware\AuthCheck;
+use Board;
 
+/**
+ * Index
+ */
 Route::get('/', 'AuthController@index');
 
-// Login
+/**
+ *  Login  
+ */ 
 Route::prefix('auth')->group(function () {
+    // Sign In
     Route::post('signin', 'AuthController@signin');
+
+    // Sign Out
     Route::get('signout', 'AuthController@signout');
 });
 
-// Admin
+/**
+ * Admin
+ */
 Route::prefix('admin')->group(function () {
+    // Admin Index
     Route::get('/', 'AdminController@main')->middleware(AuthCheck::class);
     
+    // Board Define Format
+    //  - Route Set Table Name 
     Route::get('board', function(){
-        return view('admin.board');
+        $tbl = 'brdsim';
+        return view('admin.board')->with('set', Board::template($tbl));
     })->middleware(AuthCheck::class);
-    Route::post('board/action', 'BoardController@action')->middleware(AuthCheck::class);
+
+    // Board Action Format
+    Route::post('board/action/{tbl}', function($tbl){
+        return Board::action($tbl);
+    })->middleware(AuthCheck::class);
+     
 
     Route::get('users', 'AdminController@users')->middleware(AuthCheck::class);
     Route::get('access', 'AdminController@accessLog')->middleware(AuthCheck::class);
@@ -39,7 +59,9 @@ Route::prefix('admin')->group(function () {
     })->middleware(AuthCheck::class);
 });
 
-//Common
+/**
+ * Common
+ */
 Route::prefix('cmm')->group(function(){
     //Route::get('page', 'CommonController@getPage');
 });

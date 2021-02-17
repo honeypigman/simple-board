@@ -1,6 +1,6 @@
 <?php
 /**
- *  Title : Auth Controller  |   Honeypigman@gmail.com
+ *  Title : Auth Controller | Honeypigman@gmail.com
  *  Date : 2020.12.30
  * 
  */
