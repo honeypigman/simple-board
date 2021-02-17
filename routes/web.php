@@ -38,21 +38,30 @@ Route::prefix('admin')->group(function () {
     // Admin Index
     Route::get('/', 'AdminController@main')->middleware(AuthCheck::class);
     
-    // Board Define Format
+    /////////////////////////////////////////////////////////////////////////////
+    // Board Format - Action 
+    Route::post('board/action/{tbl}', function($tbl){
+        return Board::action($tbl);
+    })->middleware(AuthCheck::class);
+
+    // Board Format - Define
     //  - Route Set Table Name 
     Route::get('board', function(){
         $tbl = 'brdsim';
         return view('admin.board')->with('set', Board::template($tbl));
     })->middleware(AuthCheck::class);
 
-    // Board Action Format
-    Route::post('board/action/{tbl}', function($tbl){
-        return Board::action($tbl);
+    Route::get('access', function(){
+        $tbl = 'acclog';
+        return view('admin.board')->with('set', Board::template($tbl));
     })->middleware(AuthCheck::class);
-     
 
-    Route::get('users', 'AdminController@users')->middleware(AuthCheck::class);
-    Route::get('access', 'AdminController@accessLog')->middleware(AuthCheck::class);
+    Route::get('users', function(){
+        $tbl = 'usrlst';
+        return view('admin.board')->with('set', Board::template($tbl));
+    })->middleware(AuthCheck::class);
+
+    /////////////////////////////////////////////////////////////////////////////
 
     Route::get('setting', function(){
         return view('admin/setting');

@@ -1,4 +1,9 @@
 <?php
+/**
+ *  Title : Function Board Comman  | Honeypigman@gmail.com
+ *  Date : 2021.02.17
+ * 
+ */
 
 namespace App\Func;
 
@@ -8,60 +13,110 @@ use Session;
 
 class Board
 {
-    static function template($tbl){
+    /**
+     * Board Template 
+     * Param[1] : Table Name
+     * Param[2] : Select Object - MODAL, COLUMN, TAB ..
+     */
+    static function template($tbl, $obj=null){
         unset($_SET);
         $_SET['TABLE'] = $tbl;
 
         switch( $tbl ) {
-            // Simple Board
-            case 'brdsim':
-                $_SET['TAB']['used'] = true;
-                $_SET['TAB']['object'] = ['Active', 'Delete'];
-                
-                $_SET['SEARCH']['used'] = true;
-                
-                $_SET['BTN']['used'] = true;    
-                $_SET['BTN']['excel'] = true;
-                $_SET['BTN']['write'] = true;
-                
-                $_SET['TITLE']['object'] = [['no',3], ['sort',3], ['title', 20], ['info', 15], ['status', 5]];
-                break;
+            // User
             case 'usrlst':
+                $_SET['MODAL']['used'] = true;
                 $_SET['TAB']['used'] = true;
                 $_SET['TAB']['object'] = ['Active', 'Delete'];
-                
-                $_SET['SEARCH']['used'] = true;
-                
+                $_SET['SEARCH']['used'] = true;                
+                $_SET['BTN']['used'] = true;    
+                $_SET['BTN']['excel'] = false;
+                $_SET['BTN']['write'] = true;                    
+                $_SET['COLUMN']['object'] = [['no',3], ['email',20], ['sign_in', 15], ['sign_out', 15], ['status', 5]];
+                break;
+
+            // Access Log
+            case 'acclog':
+                $_SET['MODAL']['used'] = false;
+                $_SET['TAB']['used'] = false;
+                $_SET['SEARCH']['used'] = false;                
+                $_SET['BTN']['used'] = false;    
+                $_SET['COLUMN']['object'] = [['login_id',10], ['ip',10], ['request_uri', 25], ['request_time', 15]];
+                break;
+            
+            // Simple Board
+            default:
+                $_SET['MODAL']['used'] = true;
+                $_SET['TAB']['used'] = true;
+                $_SET['TAB']['object'] = ['Active', 'Delete'];
+                $_SET['SEARCH']['used'] = true;                
                 $_SET['BTN']['used'] = true;    
                 $_SET['BTN']['excel'] = true;
-                $_SET['BTN']['write'] = true;
-                
-                $_SET['TITLE']['object'] = [['no',3], ['sort',3], ['title', 25], ['info', 15], ['status', 5]];
-                break;
-            default:
-                $_SET['TAB']['used'] = false;
-                $_SET['TAB']['object'] = ['Active', 'Delete'];
-                
-                $_SET['SEARCH']['used'] = false;
-                
-                $_SET['BTN']['used'] = false;
-
-                $_SET['TITLE']['object'] = [['no',3], ['sort',3], ['title', 20], ['info', 15], ['status', 5]];
+                $_SET['BTN']['write'] = true;                
+                $_SET['COLUMN']['object'] = [['no',3], ['title', 20], ['w_id', 10], ['w_time', 10], ['m_id', 10], ['m_time', 10], ['status', 5]];
         }
-        return $_SET;
+        if($obj){
+            return $_SET[$obj];
+        }else{
+            return $_SET;
+        }
     }
 
-    static function board(Request $request){
-        /**
-         *  PARAM[1] : table name
-         */
-        $_SET = $this->template('brdsim');
-        return view('admin.board')->with('set', $_SET);
+    /**
+     * Board MODEL
+     * Param[1] : Query Command - Count, List ..
+     * Param[2] : Table Name
+     * Param[3] : get Data
+     * Param[4] : page info
+     */
+    static function model($query, $tbl, $_DATA, $page=null){
+        unset($_RS);
+        switch( $tbl ) {
+            // User
+            case 'usrlst':
+                $_RS['COUNT'] = DB::table($tbl)->where('status',$_DATA['list_status'])->count();
+                $_RS['LIST'] = DB::table($tbl)
+                ->select(DB::raw(Board::setColumns($tbl)))
+                ->where('status',$_DATA['list_status'])
+                ->orderByRaw('no desc')
+                ->offset($page['offset'])
+                ->limit($page['limit'])
+                ->get();    
+                break;
+
+            // Access Log
+            case 'acclog':
+                $_RS['COUNT'] = DB::table($tbl)->count();
+                $_RS['LIST'] = DB::table($tbl)
+                ->select(DB::raw(Board::setColumns($tbl)))
+                ->orderByRaw('request_time desc')
+                ->offset($page['offset'])
+                ->limit($page['limit'])
+                ->get();     
+                break;
+
+            // Simple Board
+            default:
+                $_RS['COUNT'] = DB::table($tbl)->where('status',$_DATA['list_status'])->count();
+                $_RS['LIST'] = DB::table($tbl)
+                ->select(DB::raw(Board::setColumns($tbl)))
+                ->where('status',$_DATA['list_status'])
+                ->orderByRaw('no desc')
+                ->offset($page['offset'])
+                ->limit($page['limit'])
+                ->get();            
+        }
+
+        return $_RS[$query];
     }
 
+    /**
+     * Board Action
+     * Param[1] : Table Name
+     */
     static function action($tbl)
     {
-        unset($_DATA);
+        unset($_DATA, $_COLUMN);
         $_DATA = $_POST;
 
        if($_DATA['action'] == "Save"){
@@ -123,26 +178,19 @@ class Board
             $page = Array();
             $page['limit']=env('PER_PAGE');
             $page['offset']=($_DATA['current_page']>1?(($_DATA['current_page']-1)*env('PER_PAGE')):0);
-            $page['totalCnt'] = DB::table($tbl)->where('status',$_DATA['list_status'])->count();
+            $page['totalCnt'] = Board::model('COUNT', $tbl, $_DATA);
             $page['totalPage'] = ceil($page['totalCnt']/$page['limit']);
             $page['current_page'] = $_DATA['current_page'];
-
-            $list = DB::table($tbl)
-            ->where('status',$_DATA['list_status'])
-            ->orderByRaw('no desc')
-            ->offset($page['offset'])->limit($page['limit'])->get();
-            //->orderByRaw('no desc')->paginate(env('PER_PAGE'));
-            //->limit(env('PER_PAGE'))->get();
+            $list = Board::model('LIST', $tbl, $_DATA, $page);
             
             $setList = "";
             foreach($list as $k=>$rs){
-                $setList.= "<tr style='vertical-align:middle; cursor:pointer; height:40px;' class='boardView' id='no_".$rs->no."'>";
-                $setList.= "<td><input class='form-check-input' type='checkbox' value='' id='flexCheckDefault'></td>";
-                $setList.= "<td>".$rs->no."</td>";
-                $setList.= "<td>".$rs->sort."</td>";
-                $setList.= "<td>".$rs->title."</td>";
-                $setList.= "<td>".$rs->m_id."<br/>".$rs->m_time."</td>";
-                $setList.= "<td style='".($rs->status=='Y'?'color:blue;':'color:gray;')."'>".$rs->status."</td>";
+                $rs_array = array_keys((array)$rs);
+                $setId = (Board::template($tbl, 'MODAL')['used']?"no_".$rs->no:"no");
+                $setList.= "<tr style='vertical-align:middle; cursor:pointer; height:40px;' class='boardView' id='".$setId."'>";
+                foreach($rs_array as $k=>$v){
+                    $setList.= "<td>".$rs->{$rs_array[$k]}."</td>";
+                }
                 $setList.= "</tr>";
             }
             
@@ -153,5 +201,19 @@ class Board
             $_RS['result'] = false;
         }
         return json_encode($_RS);
-    }    
+    }
+
+    /**
+     * DB Select Columns Setting
+     * Param[1] : Table Name
+     */
+    static function setColumns($tbl){
+        unset($_COLUMNS);
+        $_COLUMNS = Board::template($tbl, 'COLUMN');
+        $columns = "";
+        foreach($_COLUMNS['object'] as $column){
+            $columns.=$column[0].",";
+        }
+        return substr($columns, 0,-1);
+    }
 }

@@ -76,11 +76,10 @@
     @endif
 
     <!-- Board List //-->    
-    <table class="table table-sm table-hover">
+    <table class="table table-sm table-hover" style="margin-top:15px;">
         <thead>
             <tr>
-                <th scope="col" style="width: 3%"><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"></th>
-                @foreach( $set['TITLE']['object'] as $column )
+                @foreach( $set['COLUMN']['object'] as $column )
                     <th scope="col" style="width: {{ $column[1] }}%">{{ $column[0] }}</th>                
                 @endforeach
             </tr>

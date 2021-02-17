@@ -22,24 +22,4 @@ class AdminController extends BaseController
         return view('admin.index');
     }
 
-    public function users(Request $request)
-    {
-        unset($_DATA);
-        $tbl="usrlst";
-        $list = DB::table($tbl)->select(
-            DB::raw('no, email, sign_in, sign_out, status, (select request_time from acclog where email = email order by request_time desc limit 1) as last_access_time')
-        )->orderByRaw('no desc')->get();
-        
-        return view('admin.users')->with('result', $list);
-    }
-
-    public function accessLog(Request $request)
-    {
-        unset($_DATA);
-
-        $tbl="acclog";
-        $list = DB::table($tbl)->orderByRaw('request_time desc')->get();
-
-        return view('admin.access')->with('result', $list);
-    }
 }
