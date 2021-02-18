@@ -1,5 +1,5 @@
 <!--    
-    Title : Board Layout | Honeypigman@gmail.com
+    Title : Board Common Layout | Honeypigman@gmail.com
     Date : 2020.12.30
 //-->
 @extends('layout/header')

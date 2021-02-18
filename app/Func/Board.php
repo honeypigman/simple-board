@@ -32,7 +32,7 @@ class Board
                 $_SET['BTN']['used'] = true;    
                 $_SET['BTN']['excel'] = false;
                 $_SET['BTN']['write'] = true;                    
-                $_SET['COLUMN']['object'] = [['no',3], ['email',20], ['sign_in', 15], ['sign_out', 15], ['status', 5]];
+                $_SET['COLUMN']['object'] = [['no',3], ['email',25], ['sign_in', 15], ['sign_out', 15], ['status', 3]];
                 break;
 
             // Access Log
@@ -53,7 +53,7 @@ class Board
                 $_SET['BTN']['used'] = true;    
                 $_SET['BTN']['excel'] = true;
                 $_SET['BTN']['write'] = true;                
-                $_SET['COLUMN']['object'] = [['no',3], ['title', 20], ['w_id', 10], ['w_time', 10], ['m_id', 10], ['m_time', 10], ['status', 5]];
+                $_SET['COLUMN']['object'] = [['no',3], ['title', 40], ['w_id', 5], ['w_time', 10], ['m_id', 5], ['m_time', 10], ['status', 3]];
         }
         if($obj){
             return $_SET[$obj];
