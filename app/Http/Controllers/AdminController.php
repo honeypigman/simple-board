@@ -14,11 +14,13 @@ use Illuminate\Http\Request;
 use DB;
 use Func;
 use Session;
+use Code;
 
 class AdminController extends BaseController
 {
     public function main(Request $request)
     {
+        Code::get();
         return view('admin.index');
     }
 

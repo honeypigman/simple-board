@@ -98,4 +98,23 @@ class Func
             Func::setRecords($tbl, $_DATA)
         ]);
     }
+
+    static function code($category){
+        unset($_RS);
+        $tbl="catcod";
+        $list = DB::table($tbl)
+        ->select('code','name')
+        ->where([
+            ['category', '=', $category],
+            ['status','=','Y'],
+        ])
+        ->orderByRaw('sort')
+        ->get();
+
+        foreach($list as $k=>$v){
+            $_RS[$v->code]=$v->name;
+        }
+        
+        return $_RS;
+    }
 }

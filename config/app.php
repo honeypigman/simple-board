@@ -230,6 +230,7 @@ return [
         // User Custom
         'Func' => App\Func\Func::class,
         'Board' => App\Func\Board::class,
+        'Code' => App\Func\Code::class,
     ],
 
 ];
