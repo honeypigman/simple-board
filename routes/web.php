@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 use App\Http\Middleware\AuthCheck;
-use Board;
+use App\Func\Board;
 
 /**
  * Index
@@ -37,6 +37,7 @@ Route::prefix('auth')->group(function () {
 Route::prefix('admin')->group(function () {
     // Admin Index
     Route::get('/', 'AdminController@main')->middleware(AuthCheck::class);
+
     
     /////////////////////////////////////////////////////////////////////////////
     // Board Format - Action 
@@ -63,9 +64,9 @@ Route::prefix('admin')->group(function () {
 
     /////////////////////////////////////////////////////////////////////////////
 
-    Route::get('setting', function(){
-        return view('admin/setting');
-    })->middleware(AuthCheck::class);
+    // System Setting Info
+    Route::get('setting', 'AdminController@setting')->middleware(AuthCheck::class);
+    Route::post('setting/{action}', 'AdminCOntroller@setting')->middleware(AuthCheck::class);
 });
 
 /**
