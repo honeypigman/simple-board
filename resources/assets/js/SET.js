@@ -4,15 +4,69 @@
  * 
  */
 $(document).ready(function() {
+    
+    var spinnerBtn= "<div class='spinner-border spinner-border-sm' role='status'><span class='visually-hidden'>Loading...</span></div> ";
 
-    // Set Modal
-    init_modal('settingModal', 750, 450);
+    // Modal - Category Init
+    init_modal('modalCategory', 450, 110);
+    $("#btnCategoryModal").click(function(){
+        console.log('modalCategory');
+        $(".modal-title").text('Category');
+        $("#inputCategory").val('');
+        $("#inputRemark").val('');
+        $("#btnCategory").text("Save");
+        $("#btnCategory").attr("disabled", false);
+    });
+
+    // Modal Category - Save
+    $("#btnCategory").click(function(){
+        var action = $(this).text();
+        $(this).prepend(spinnerBtn);
+        $(this).attr("disabled", true);
+        submit('categoryFrm', action, '');
+    });
+
+    // Modal - Code Init
+    init_modal('modalCode', 450, 150);
+    $("#btnCodeModal").on('click',function () {
+        $(".modal-title").empty().append('Code :: <span class="badge rounded-pill bg-light text-dark">'+$("#category").val()+'</span>');
+        $("#inputCategory").val('');
+        $("#inputSort").val('');
+        $("#inputCode").val('');
+        $("#inputName").val('');
+        $("#btnCode").text("Save");
+        $("#btnCode").attr("disabled", false);
+    });
+
+    // Modal Code - Save
+    $("#btnCode").click(function(){
+        var category = $("#category").val();
+        var action = $(this).text();
+        $(this).prepend(spinnerBtn);
+        $(this).attr("disabled", true);
+        submit('categoryCodeFrm', action, category);
+    });
 
     var submit = function(form, action, key){
 
-        $("input[name=action]", document.form).val(action);  
-        $("input[name=category]", document.form).val(key);  
+        $("input[name=category]", document.form).val(key);
+        $("input[name=action]", document.form).val(action);         
 
+        // Modal Data Setting
+        if( action == 'Save' ){
+            switch(form){
+                case 'categoryFrm':
+                    $("input[name=remark]", document.form).val($("#inputRemark").val());  
+                    $("input[name=category]", document.form).val($("#inputCategory").val());  
+                    break;
+                case 'categoryCodeFrm':
+                    $("input[name=sort]", document.form).val($("#inputSort").val());  
+                    $("input[name=code]", document.form).val($("#inputCode").val());  
+                    $("input[name=name]", document.form).val($("#inputName").val());  
+                    break;
+            }
+        }
+    
         var formData = $("#"+form).serializeObject();
         $.ajax({
             method:"POST",
@@ -25,21 +79,25 @@ $(document).ready(function() {
             success : function(rs){
                 if(rs.result){
                     if( action == 'List' ){
-                        // Category
-                        if( form == 'categoryFrm' ){
-                            $("#categoryBody").empty().append(rs.result_list);
-                        }
-                        // Code
-                        else{
-                            $("#categoryCodeBody").empty().append(rs.result_list);
-                            $("#category-title").empty().append('Code List :: <span class="badge rounded-pill bg-light text-dark">'+key+'</span>');
+                        switch(form){
+                            case 'categoryFrm':
+                                $("#categoryBody").empty().append(rs.result_list);
+                                break;
+                            case 'categoryCodeFrm':
+                                $("#categoryCodeBody").empty().append(rs.result_list);
+                                $("#btnCodeModal").removeClass("d-none");
+                                $("#category-title").empty().append('Code List :: <span class="badge rounded-pill bg-light text-dark">'+key+'</span>');
+                                break;
                         }
                         feather.replace();
                     }
 
-                    else if ( action == 'Update' || action == 'Delete' ){
+                    else if ( action == 'Update' || action == 'Delete' || action == 'Save' ){
+                        if( action == 'Save' ){
+                            $("div[id^='modal']").modal("hide");
+                        }
                         submit(form, 'List', key);
-                    }        
+                    }
                 }
             },
             error : function(error){

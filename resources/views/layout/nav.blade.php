@@ -11,7 +11,11 @@
             @foreach( Code::get('NAVBAS') as $code=>$name )
             <li class="nav-item @if(Request::segment(2)==($code)) bg-warning @endif">
                 <a class="nav-link" href="/admin/{{ $code }}">
-                <span data-feather="list"></span>
+                @if( !empty(Code::get('NAVIMG')[$code]) )
+                    <span data-feather="{{ Code::get('NAVIMG')[$code] }}"></span>
+                @else
+                    <span data-feather="alert-octagon"></span>
+                @endif
                 {{ $name }}
                 </a>
             </li>
@@ -24,7 +28,11 @@
             @foreach( Code::get('NAVSYS') as $code=>$name )
             <li class="nav-item @if(Request::segment(2)==($code)) bg-warning @endif">
                 <a class="nav-link" href="/admin/{{ $code }}">
-                <span data-feather="{{ Code::get('NAVIMG')[$code] }}"></span>
+                @if( !empty(Code::get('NAVIMG')[$code]) )
+                    <span data-feather="{{ Code::get('NAVIMG')[$code] }}"></span>
+                @else
+                    <span data-feather="alert-octagon"></span>
+                @endif
                 {{ $name }}
                 </a>
             </li>

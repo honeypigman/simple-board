@@ -123,8 +123,6 @@ class Board
             $_DATA['sort'] = 1;
             $_DATA['w_id'] = $_DATA['email'];
             $_DATA['w_time'] = date('Y-m-d H:i:s');
-            $_DATA['m_id'] = $_DATA['email'];
-            $_DATA['m_time'] = date('Y-m-d H:i:s');
             $_DATA['status'] = 'Y';
 
             DB::table($tbl)->insert([ 

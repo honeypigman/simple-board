@@ -65,7 +65,9 @@ Route::prefix('admin')->group(function () {
     /////////////////////////////////////////////////////////////////////////////
 
     // System Setting Info
-    Route::get('setting', 'AdminController@setting')->middleware(AuthCheck::class);
+    Route::get('setting', function(){
+        return view('admin.setting');
+    })->middleware(AuthCheck::class);
     Route::post('setting/{action}', 'AdminCOntroller@setting')->middleware(AuthCheck::class);
 });
 

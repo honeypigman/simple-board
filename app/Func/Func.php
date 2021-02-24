@@ -16,7 +16,7 @@ class Func
      *  PARAM[1] : Requests
      */
     static function requestToData($request){
-        unset($_DATA);
+        $_DATA=Array();
         foreach($request->request as $k=>$v){
             $_DATA[$k]=$v;
         }
@@ -53,7 +53,6 @@ class Func
      *  PARAM[1] : $request
      */
     static function setValidation($request){
-        unset($_RS);
         $messages = [
             'email.min' => 'The Email minimum length is 5 digits!',
             'email.email' => 'Invalid Email Format!',
@@ -100,7 +99,7 @@ class Func
     }
 
     static function code($category){
-        unset($_RS);
+        $_RS=Array();
         $tbl="catcod";
         $list = DB::table($tbl)
         ->select('code','name')

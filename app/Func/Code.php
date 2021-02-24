@@ -16,7 +16,7 @@ class Code
      * Param[1] : Default null / Category 
      */
     static function get($category=null){
-        unset($_RS);
+        $_RS=Array();
         $tbl="catcod";
         $list = DB::table($tbl)
         ->select('category','code','name')
@@ -25,7 +25,7 @@ class Code
         ])
         ->orderByRaw('sort')
         ->get();
-
+                
         foreach($list as $k=>$v){
             if( $category ){
                 if( $category == $v->category ){
