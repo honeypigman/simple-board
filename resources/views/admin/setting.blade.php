@@ -19,7 +19,7 @@
   @csrf
   <input type="hidden" name="div" value="CODE">
   <input type="hidden" name="action" id="action">
-  <input type="text" name="category" id="category">
+  <input type="hidden" name="category" id="category">
   <input type="hidden" name="sort" id="sort">
   <input type="hidden" name="code" id="code">
   <input type="hidden" name="name" id="name">

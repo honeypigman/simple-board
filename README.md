@@ -1,9 +1,9 @@
 ## About Project
 - 기본적인 형태의 게시판 관리 및 관리자 화면 구현을 목표로 하였습니다.
 > 시스템 구성
-> 1) 게시판 
+> 1) 기본 게시판 
 > 2) 유저관리
-> 3) 접근로그 관리
+> 3) 접근로그
 > 4) 코드관리
 
 ## How to Use
@@ -24,7 +24,7 @@
 > 
 > LOG_CHANNEL=stack
 > 
-> DB_CONNECTION=[DB TYPE : mysql, oracle, postgres]
+> DB_CONNECTION=[DB TYPE : mysql, pgsql ..]
 > DB_HOST=[DB HOST ]
 > DB_PORT=[DB PORT]
 > DB_DATABASE=[DB NAME]
@@ -40,7 +40,7 @@
 > PER_PAGE=10
 >```
 > 4) Composer 설치
-> ```git
+> ```
 > composer install
 > composer require doctrine/dbal:2.*
 > ```
@@ -56,7 +56,6 @@
 - Bootstrap v5
 - CKEditor4 [CKEDITOR](https://ckeditor.com/docs/ckeditor4/latest/index.html).
 
-
 ## Next Goals
 - RestAPI Interface 구축
 - 게시판 관리의 시스템화
@@ -65,3 +64,8 @@
 
 ## License
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Contact Me
+- 오늘 역시 조금씩 꾸준하게 하자.
+- 소스리뷰 및 조언 언제나 환영합니다. 
+- honeypigman@gmail.com
