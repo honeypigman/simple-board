@@ -14,8 +14,10 @@
 > ```
 > 3) .env 파일 생성
 > 4) Composer 설치
-> ##### composer install
-> ##### composer require doctrine/dbal:2.*
+> ```git
+> composer install
+> composer require doctrine/dbal:2.*
+> ```
 > 5) php artisan key:generate
 
 ## Based on following plugins or services
