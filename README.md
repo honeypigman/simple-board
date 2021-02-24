@@ -18,7 +18,10 @@
 > composer install
 > composer require doctrine/dbal:2.*
 > ```
-> 5) php artisan key:generate
+> 5) 라라벨 키 재생성
+> ```php
+> php artisan key:generate
+> ```
 
 ## Based on following plugins or services
 - PHP v7
