@@ -54,6 +54,7 @@
 - Apache v2.3
 - Laravel v7.3
 - Bootstrap v5
+- Postgresql
 - CKEditor4 [CKEDITOR](https://ckeditor.com/docs/ckeditor4/latest/index.html).
 
 ## Next Goals
