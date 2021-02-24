@@ -7,14 +7,14 @@
 > 4) 코드관리
 
 ## How to Use
-> 1. 프로젝트 경로로 이동
-> 2. git clone
-> ##### git clone https://github.com/honeypigman/simple-board.git ./
-> 3. .env 파일 생성
-> 4. Composer 설치
-> ##### composer install
-> ##### composer require doctrine/dbal:2.*
-> 5. php artisan key:generate
+1. 프로젝트 경로로 이동
+2. git clone
+#### git clone https://github.com/honeypigman/simple-board.git ./
+3. .env 파일 생성
+4. Composer 설치
+##### composer install
+##### composer require doctrine/dbal:2.*
+5. php artisan key:generate
 
 ## Based on following plugins or services
 - PHP v7
