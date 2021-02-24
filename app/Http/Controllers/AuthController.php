@@ -36,7 +36,7 @@ class AuthController extends BaseController
         $_DATA['request_ip'] = $_SERVER['REMOTE_ADDR'];
         $_DATA['request_uri'] = $_SERVER['REQUEST_URI'];
         $_DATA['request_time'] = date('Y-m-d H:i:s', $_SERVER['REQUEST_TIME']);
-        $_DATA['password'] = hash('sha512', $_POST['password'].env('APP_KEY'));
+        $_DATA['password'] = hash('sha512', $_POST['password']);
 
         // Valid Check
         Func::setValidation($request);
